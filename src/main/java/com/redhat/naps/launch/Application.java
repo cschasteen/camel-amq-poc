@@ -84,6 +84,7 @@ public class Application extends RouteBuilder {
                         .throwException(MllpInvalidMessageException.class, "Message type not supported")
                     .end()
                  */
+                .log("sending message to topic 'my-topic'")
                 .to("log:com.redhat.naps.launch?level=DEBUG&showAll=true&multiline=true")
                 .to("kafka:my-topic");
     }

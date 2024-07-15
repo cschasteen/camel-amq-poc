@@ -73,6 +73,7 @@ public class Application extends RouteBuilder {
 
         from("mllp://8088?autoAck=true")
                 .routeId("MLLP Consumer")
+                .log("Sending message to topic")
                 /*
                 .unmarshal(hl7)
                 .validate(messageConforms())

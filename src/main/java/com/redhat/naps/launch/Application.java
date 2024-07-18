@@ -12,8 +12,10 @@ import org.apache.camel.spi.DataFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 import static org.apache.camel.component.hl7.HL7.ack;
 import static org.apache.camel.component.hl7.HL7.messageConforms;
+import static org.apache.camel.component.hl7.HL7.hl7terser;
 
 
 @ApplicationScoped

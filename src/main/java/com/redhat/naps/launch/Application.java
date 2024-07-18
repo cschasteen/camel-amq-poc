@@ -19,7 +19,7 @@ import static org.apache.camel.component.hl7.HL7.messageConforms;
 @ApplicationScoped
 public class Application extends RouteBuilder {
 
-    static SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+  /*    static SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyyMMddHHmmss");
     static String hl7MessageTemplate
             = "MSH|^~\\&|REQUESTING|ICE|INHOUSE|RTH00|<MESSAGE_TIMESTAMP>||ORM^O01|<MESSAGE_CONTROL_ID>|D|2.3|||AL|NE|||" + '\r'
             + "PID|1||ICE999999^^^ICE^ICE||Testpatient^Testy^^^Mr||19740401|M|||123 Barrel Drive^^^^SW18 4RT|||||2||||||||||||||"
@@ -40,7 +40,7 @@ public class Application extends RouteBuilder {
         String tmpMessage = hl7MessageTemplate.replaceFirst("<MESSAGE_TIMESTAMP>", timestampFormat.format(new Date()));
         return tmpMessage.replaceFirst("<MESSAGE_CONTROL_ID>", String.format("%05d", 1));
     }
-
+*/
     @Override
     public void configure() throws Exception {
         DataFormat hl7 = new HL7DataFormat();
@@ -73,7 +73,6 @@ public class Application extends RouteBuilder {
 
         from("mllp://8088?autoAck=true")
                 .routeId("MLLP Consumer")
-                .log("Sending message to topic")
                 /*
                 .unmarshal(hl7)
                 .validate(messageConforms())
@@ -85,7 +84,16 @@ public class Application extends RouteBuilder {
                         .throwException(MllpInvalidMessageException.class, "Message type not supported")
                     .end()
                  */
-                .to("log:com.redhat.naps.launch?level=DEBUG&showAll=true&multiline=true")
-                .to("kafka:my-topic");
+                .choice()
+                    .when(hl7terser("PV1-3").contains("ICU"))                        
+                        .to("log:com.redhat.naps.launch?level=DEBUG&showAll=true&multiline=true")
+                        .log("Sending message to icu-only-topic")
+                        .to("kafka:icu-only-topic")
+                        .log("Sending message to all-messages-topic")
+                        .to("kafka:all-messages-topic")
+                    .otherwise()
+                        .to("log:com.redhat.naps.launch?level=DEBUG&showAll=true&multiline=true")
+                        .log("Sending ONLY to all-messages-topic")
+                        .to("kafka:all-messages-topic");
     }
 }

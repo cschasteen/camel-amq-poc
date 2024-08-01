@@ -70,10 +70,10 @@ public class Application extends RouteBuilder {
                 .routeId("FromKafka2MLLP")
                 .log("Received message from icu-onlytopic - origin: ${header.origin}")
                 //to("mllp://8088") this would be swapped out with the IP/PORT the consumer would need to send to
-                .log("****************************************************************");
-                .log("An attempt would be made here to send the contents of the HL7 to a new IP/Port");
-                .log("****************************************************************");
-                .log("***********************MESSAGE BODY**********************");
+                .log("****************************************************************")
+                .log("An attempt would be made here to send the contents of the HL7 to a new IP/Port")
+                .log("****************************************************************")
+                .log("***********************MESSAGE BODY**********************")
                 .to("log:after?showAll=true&multiline=true");
 
    

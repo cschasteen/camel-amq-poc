@@ -63,15 +63,20 @@ public class Application extends RouteBuilder {
                 .setHeader("origin", simple("timer"))
                 .to("kafka:{{kafka.topic.name}}")
                 .log("Message correctly sent to the topic!");
+       */
 
         // kafka consumer
-        from("kafka:{{kafka.topic.name}}")
+        from("kafka:icu-only-topic")
                 .routeId("FromKafka2MLLP")
-                .log("Received message from topic - origin: ${header.origin}")
-                .to("mllp://8088")
-                .log("Received ACK from MLLP");
+                .log("Received message from icu-onlytopic - origin: ${header.origin}")
+                //to("mllp://8088") this would be swapped out with the IP/PORT the consumer would need to send to
+                .log("****************************************************************");
+                .log("An attempt would be made here to send the contents of the HL7 to a new IP/Port");
+                .log("****************************************************************");
+                .log("***********************MESSAGE BODY**********************");
+                .to("log:after?showAll=true&multiline=true");
 
-         */
+   
 
         from("mllp://8088?autoAck=true")
                 .routeId("MLLP Consumer")

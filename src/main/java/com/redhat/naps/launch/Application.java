@@ -87,7 +87,7 @@ public class Application extends RouteBuilder {
                     .end()
                  */
                 .choice()
-                    .when(hl7terser("PV1-3").contains("ICU"))                        
+                    .when(hl7terser("PV1-3-9").contains("ICU"))                        
                         .to("log:com.redhat.naps.launch?level=DEBUG&showAll=true&multiline=true")
                         .log("Sending message to icu-only-topic")
                         .to("kafka:icu-only-topic")
